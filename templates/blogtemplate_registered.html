@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<title>{{ username }}'s blog</title>
+		<style type="text/css">
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	<body class='container'>
+		<header class='row'>
+			<h1 class='text-center'>{{username }}'s blog</h1>
+		</header>
+		<hr>
+		<div class=row>
+			<div class='col-md-6 text-center'><a href='/'>Home</a></div>
+			<div class='col-md-6 text-center'><a href='/logout'>Logout</a></div>
+		</div>
+		<hr>
+		<p class='text-center' style='font-size: 150%'>Hey {{username}}! You can create a new post for this blog <a href='/users/{{username}}/newpost'>here</a> </p>
+		<hr>
+		{% for post in posts %}
+			<div class='row'>
+				<h2><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h2>	
+				<div>{{post.content.replace('\n', '<br>') | safe }}</div>
+			</div>
+			<hr>
+		{% endfor %}
+	</body>
+</html>

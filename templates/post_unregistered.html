@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<title>{{ post.subject }}</title>
+	</head>
+	<body class='container'>
+		<header class='row'>
+			<h1 class='text-center'>{{ post.subject }}</h1>
+		</header>
+		<hr>
+		<div class='content'>
+			{{ post.content | safe }}
+		</div>
+	</body>
+</html>

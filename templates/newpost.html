@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<title>Create a new post</title>
+		<style type="text/css">
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	<body class='container'>
+		<header class='row'>
+			<h1 class='text-center'>Create a new post</h1>
+		</header>
+		<hr>
+		<div class=row>
+			<div class='col-md-6 text-center'><a href='/'>Home</a></div>
+			<div class='col-md-6 text-center'><a href='/logout'>Logout</a></div>
+		</div>
+		<hr>
+		<div class='row'>
+			<form method='post'>
+				<div class="form-group">
+    				<label>Title:</label>
+    				<input type="text" class="form-control" id="subject" name='subject' value='{{subject}}'>
+  				</div>
+  				<div class="form-group">
+  					<label>Content:</label>
+    				<textarea class="form-control" rows="15" name='content'>{{content}}</textarea>
+  				</div>
+  				<button type="submit" class="btn btn-default">Publish</button>
+  			</form>
+  		</div>
+  		<div class='row error'>{{error }}</div>
+	</body>
+</html>
