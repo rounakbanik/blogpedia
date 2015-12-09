@@ -5,13 +5,9 @@
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
-		<title>{{ username }}'s blog</title>
-		<style type="text/css">
-			a:hover {
-				text-decoration: none;
-			}
-		</style>
+		<title>Help</title>
 	</head>
+
 	<body class='container lato'>
 		<div class='row titlebar lato'>
 			<header class='row'>
@@ -23,20 +19,15 @@
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/help">Help</a></li>
 					<li><a href="/about">About</a></li>
-					<li><a href="/users/{{check_username}}/archive">Archive</a></li>
-					<li><a href="/logout">Logout</a></li>
 				</ul>
 			</nav>
 		</div>
-		<div class='col-md-9 content-blog'>
-			<h2 class='lato-bold'>{{username}}'s blog</h2>
-			{% for post in posts %}
-				<hr>
-				<div>
-					<h3 class='lato-bold'><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h3>	
-					<div>{{post.content.replace('\n', '<br>') | safe }}</div>
-				</div>
-			{% endfor %}
+		<div class='col-md-7 content-static'>
+			<h2 class='lato-bold'>Help</h2>
+			<p>The author of this website is no longer actively involved with this project.</p>
+			<p>However, if you find any major bugs in the website or have trouble understanding its functioning or features, please e-mail your queries to the following address:</p>
+			<p><span class='lato-bold'>E-Mail: </span>rounakbanik@gmail.com</p>
+
 		</div>
 	</body>
 </html>

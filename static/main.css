@@ -5,8 +5,23 @@
 	box-sizing: border-box;
 }
 
+.white {
+	color: white
+}
+
+
+.lato {
+	font-family: 'Lato', sans-serif;
+}
+
+.lato-bold {
+	font-family: 'Lato', sans-serif;
+	font-weight: 900;
+}
+
 body {
 	font-family: 'Lato', sans-serif;
+	background: url(/static/images/background.jpg) no-repeat center center fixed;
 }
 
 .main-text {
@@ -15,11 +30,13 @@ body {
 
 .register-form {
 	border: 1px solid #ddd;
-	padding: 40px;
+	padding: 20px;
+	background-color: #ddd;
+	border-radius: 5px;
 }
 
 .login-form {
-	margin-top: 25px;
+	margin-top: 18px;
 }
 
 .error {
@@ -30,3 +47,54 @@ body {
 a:hover {
 	text-decoration: none;
 }
+
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+.navbar li a:hover {
+    background-color: #111;
+    text-decoration: none;
+}
+
+.content-static {
+	background-color: #ddd;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+.content-edit {
+	background-color: #ddd;
+	margin-right: auto;
+	margin-left: auto;
+	border-radius: 5px;
+	padding: 20px;
+}
+
+.content-blog {
+	background-color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 5px;
+	padding: 20px;
+}
+

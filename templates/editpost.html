@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
-		<title>{{ username }}'s blog</title>
-		<style type="text/css">
-			a:hover {
-				text-decoration: none;
-			}
-		</style>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<title>Edit Post</title>
 	</head>
+
 	<body class='container lato'>
 		<div class='row titlebar lato'>
 			<header class='row'>
@@ -23,20 +19,25 @@
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/help">Help</a></li>
 					<li><a href="/about">About</a></li>
-					<li><a href="/users/{{check_username}}/archive">Archive</a></li>
+					<li><a href="/users/{{username}}/archive">Archive</a></li>
 					<li><a href="/logout">Logout</a></li>
 				</ul>
 			</nav>
 		</div>
-		<div class='col-md-9 content-blog'>
-			<h2 class='lato-bold'>{{username}}'s blog</h2>
-			{% for post in posts %}
-				<hr>
-				<div>
-					<h3 class='lato-bold'><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h3>	
-					<div>{{post.content.replace('\n', '<br>') | safe }}</div>
-				</div>
-			{% endfor %}
+		<div class='col-md-8 lato content-edit'>
+			<h2 class='lato-bold'>Edit Post</h2>
+			<div class='row error text-center'>{{error }}</div>
+			<form method='post'>
+				<div class="form-group">
+    				<label>Title:</label>
+    				<input type="text" class="form-control" id="subject" name='subject' value='{{post.subject}}'>
+  				</div>
+  				<div class="form-group">
+  					<label>Content:</label>
+    				<textarea class="form-control" rows="15" name='content'>{{post.content}}</textarea>
+  				</div>
+  				<button type="submit" class="btn btn-default">Publish</button>
+  			</form>
 		</div>
 	</body>
 </html>

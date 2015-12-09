@@ -12,24 +12,34 @@
 			}
 		</style>
 	</head>
-	<body class='container'>
-		<header class='row'>
-			<h1 class='text-center'>{{username }}'s blog</h1>
-		</header>
-		<hr>
-		<div class=row>
-			<div class='col-md-6 text-center'><a href='/'>Home</a></div>
-			<div class='col-md-6 text-center'><a href='/logout'>Logout</a></div>
+	<body class='container lato'>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="/users/{{username}}/archive">Archive</a></li>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</nav>
 		</div>
-		<hr>
-		<p class='text-center' style='font-size: 150%'>Hey {{username}}! You can create a new post for this blog <a href='/users/{{username}}/newpost'>here</a> </p>
-		<hr>
-		{% for post in posts %}
-			<div class='row'>
-				<h2><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h2>	
-				<div>{{post.content.replace('\n', '<br>') | safe }}</div>
+		<div class='col-md-9 content-blog'>
+			<div class='bar' style='display: grid'>
+				<h2 class='lato-bold'>{{username}}'s blog</h2>
+				<a class='text-right' href='/users/{{username}}/newpost'>New Post</a>
 			</div>
-			<hr>
-		{% endfor %}
+			{% for post in posts %}
+				<hr>
+				<div>
+					<h3 class='lato-bold'><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h3>	
+					<div>{{post.content.replace('\n', '<br>') | safe }}</div>
+				</div>
+			{% endfor %}
+		</div>
 	</body>
 </html>

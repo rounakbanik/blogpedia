@@ -1,24 +1,59 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<title>{{ post.subject }}</title>
 	</head>
-	<body class='container'>
-		<header class='row'>
-			<h1 class='text-center'>{{ post.subject }}</h1>
-		</header>
-		<hr>
-		<div class=row>
-			<div class='col-md-6 text-center'><a href='/'>Home</a></div>
-			<div class='col-md-6 text-center'><a href='/logout'>Logout</a></div>
+	<body class='container lato'>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+  			var js, fjs = d.getElementsByTagName(s)[0];
+  			if (d.getElementById(id)) return;
+  			js = d.createElement(s); js.id = id;
+  			js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href='/users/{{check_username}}/archive'>Archive</a></li>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</nav>
 		</div>
-		<hr>
-		<div class='content'>
-			{{ post.content | safe }}
+		<div class='col-md-8 content-blog'>
+			<div class='bar' style='display: grid'>
+				<h2 class='lato-bold'>{{post.subject}}</h2>
+				{% if username == check_username %}
+					<a href='/users/{{username}}/{{pid}}/edit'>Edit &nbsp; </a>
+					<a href="/users/{{username}}/{{pid}}/delete">Delete</a>
+				{% endif %}
+			</div>
+			<hr>
+			<div class='content'>
+				{{post.content | safe}}
+			</div>
+			<hr>
+			<div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+			<div>
+				<a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="Rounak_Banik" data-size="default" data-hashtags="blogpedia">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</div>
+			<div>
+				<script src="https://apis.google.com/js/platform.js" async defer></script>
+  				<g:plusone></g:plusone>
+			</div>
 		</div>
 	</body>
 </html>

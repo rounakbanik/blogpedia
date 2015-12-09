@@ -21,6 +21,8 @@ import hashlib
 import hmac
 from string import letters
 import cgi
+import time
+import datetime
 
 import webapp2
 import jinja2
@@ -146,12 +148,12 @@ class RegisterHandler(BlogHandler):
     def validate_password(self,password, verify):
         if PASSWORD_RE.match(password):
             return ""
-        return "Password is not valid"
+        return "Password is not valid."
 
     def validate_verify(self,verify, password):
         if verify == password:
             return ""
-        return "Passwords do not match"
+        return "Passwords do not match."
 
 
 class LoginHandler(BlogHandler):
@@ -188,7 +190,7 @@ class BlogPageHandler(BlogHandler):
         check_username = self.request.cookies.get('username')
         if self.user and username != check_username :
             posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 10', username)
-            self.render('blogtemplate.html', posts=posts, username=username)
+            self.render('blogtemplate.html', posts=posts, username=username, check_username=check_username)
         elif not self.user:
             posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 10', username)
             self.render('blogtemplate_unregistered.html', posts=posts, username=username)
@@ -202,7 +204,7 @@ class NewPostHandler(BlogHandler):
     def get(self, username):
         check_username = self.request.cookies.get('username')
         if self.user and username == check_username:
-            self.render('newpost.html')
+            self.render('newpost.html', username=username)
         else:
             self.redirect('/')
 
@@ -217,7 +219,7 @@ class NewPostHandler(BlogHandler):
             pid = blogpost.key().id()
             self.redirect('/users/%s/%s'%(username, str(pid)))          
         else:
-            self.render('newpost.html', error="You need both a title and content!", subject=subject, content=content)
+            self.render('newpost.html', error="You need both a title and content!", subject=subject, content=content, username=username)
 
 class PostHandler(BlogHandler):
     def get(self, username, pid):
@@ -226,7 +228,8 @@ class PostHandler(BlogHandler):
         #self.write(post.content)
         post.content = post.content.replace('\n', '<br>')
         if self.user:
-            self.render('post.html', post=post)
+            check_username = self.request.cookies.get('username')
+            self.render('post.html', post=post, check_username=check_username, username=username, pid=str(pid))
         else:
             self.render('post_unregistered.html', post=post)
 
@@ -235,8 +238,66 @@ class LogoutHandler(BlogHandler):
         self.set_cookie('username', '')
         self.set_cookie('pw_hash', '')
         self.set_cookie('uid', '')
-        self.redirect('/')
-        
+        referrer = self.request.headers.get('referer')
+        if referrer:
+            self.redirect(referrer)
+        else:
+            self.redirect('/')
+ 
+class ContactHandler(BlogHandler):
+    def get(self):
+        self.render('contact.html')
+
+class AboutHandler(BlogHandler):
+    def get(self):
+        self.render('about.html')
+
+class HelpHandler(BlogHandler):
+    def get(self):
+        self.render('help.html')  
+
+class EditPostHandler(BlogHandler):
+    def get(self, username, post_id):
+        check_username = self.request.cookies.get('username')
+        if self.user and username == check_username:
+            key = db.Key.from_path('BlogPost', int(post_id))
+            post = db.get(key)
+            self.render('editpost.html', post=post, username=username)
+        else:
+            self.redirect('/')
+
+    def post(self, username, post_id):
+        check_username = self.request.cookies.get('username')
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+
+        if subject and content and username == check_username:
+            key = db.Key.from_path('BlogPost', int(post_id))
+            blogpost = db.get(key)
+            blogpost.subject = subject
+            blogpost.content = content
+            blogpost.put()
+            self.redirect('/users/%s/%s'%(username, str(post_id)))          
+        else:
+            self.render('editpost.html', error="You need both a title and content!", subject=subject, content=content, username=username)
+
+class DeletePostHandler(BlogHandler):
+    def get(self, username, post_id):
+        check_username = self.request.cookies.get('username')
+        if self.user and username == check_username:
+            key = db.Key.from_path('BlogPost', int(post_id))
+            db.delete(key)
+            time.sleep(1)
+            self.redirect('/users/%s'%username)
+        else:
+            self.redirect('/users/%s/%s'%(username, post_id))    
+
+class ArchiveHandler(BlogHandler):
+    def get(self, username):
+        check_username= self.request.cookies.get('username')
+        blogposts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc', username)  
+        time_now = datetime.datetime.now().strftime("%Y")     
+        self.render('archive.html', user_self=self, blogposts=blogposts, username=username, time_now=time_now, check_username=check_username)
 
 
 app = webapp2.WSGIApplication([
@@ -244,7 +305,13 @@ app = webapp2.WSGIApplication([
     ('/register', RegisterHandler),
     ('/login', LoginHandler),
     ('/logout', LogoutHandler),
+    ('/contact', ContactHandler),
+    ('/about', AboutHandler),
+    ('/help', HelpHandler),
     (r'^/users/([a-zA-Z0-9_-]{3,20}$)', BlogPageHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/newpost', NewPostHandler),
+    (r'/users/([a-zA-Z0-9_-]{3,20})/archive', ArchiveHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)', PostHandler),
+    (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)/edit', EditPostHandler),
+    (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)/delete', DeletePostHandler),
 ], debug=True)

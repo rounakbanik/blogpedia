@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<title>Login</title>
 	</head>
 	<body class='container'>
-		<header class='row'>
-			<h1 class='text-center'>Login to access your account</h1>
-		</header>
-		<hr>
-		<div class='row register-form'>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="/register">Register</a></li>
+					<li><a href="/login">Login</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div class='col-md-4 register-form lato'>
+			<h2 class='lato-bold'>Login</h2>
 			<form method='post'>
 				<div class="form-group">
     				<label for="username">Username</label>
@@ -23,12 +35,10 @@
     				<input type="password" class="form-control" id="password" placeholder="Password" name='password'>
   				</div>
   				<div class='form-group error'> {{error}} </div>
-  				<button type="submit" class="btn btn-default">Login</button>
+  				<button type="submit" class="btn btn-success">Login</button>
 			</form>
-		</div>
-		<br>
-		<div class='row text-center'>
-			<p style='font-size: 125%'>New to Blogpedia? You can sign up for a free account <a href='/register'>here</a></p>
+			<br>
+			<p style='font-size: 125%'>New to Blogpedia?<br> You can sign up for a free account <a href='/register'>here</a></p>
 		</div>
 	</body>
 </html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<title>Archive- {{username}}</title>
+	</head>
+	<body class='container lato'>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+					{% if user_self.user %}
+						<li><a href="/users/{{check_username}}/archive">Archive</a></li>
+						<li><a href="/logout">Logout</a></li>
+					{% else %}
+						<li><a href="/register">Register</a></li>
+						<li><a href="/login">Login</a></li>
+					{% endif %}
+				</ul>
+			</nav>
+		</div>
+		<div class='col-md-8 content-blog'>
+			<h2 class='lato-bold'>Archive- {{username}}</h2>
+			<hr>
+			{% set temp= time_now %}
+			<ul><span class='lato-bold' style='font-size: 145%'>{{temp}}</span>
+
+			{% for blogpost in blogposts %}
+				{% if blogpost.created.strftime("%Y") == temp %}
+					<li><a href='/users/{{username}}/{{blogpost.key().id()}}'>{{blogpost.subject}}</a></li>
+				{% else %}
+					</ul><br>
+					{% set temp = blogpost.created.strftime("%Y") %}
+					<ul><span class='lato-bold' style='font-size: 145%'>{{temp}}</span>
+						<li><a href='/users/{{username}}/{{blogpost.key().id()}}'>{{blogpost.subject}}</a></li>
+				{% endif %}
+			{% endfor %}
+		    </ul>
+		</div>
+	</body>
+</html>

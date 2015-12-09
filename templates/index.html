@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
 		<title>Blogpedia</title>
 	</head>
 
-	<body class='container'>
-		<header class='row'>
-			<h1 class='col-md-7'>Blogpedia- A Micro Blog Engine</h1>
-			<div class='col-md-5 login-form'>
-				<form class="form-inline" method='post' action='/login'>
-  					<div class="form-group">
-    					<input type="text" class="form-control" id="username" placeholder="Username" name='username'>
-  					</div>
-  					<div class="form-group">
-    					<input type="password" class="form-control" id="password" placeholder="Password" name='password'>
-  					</div>
-  					<button type="submit" class="btn btn-default">Login</button>
-				</form>
-			</div>
-		</header>
-		<hr>
+	<body class='container lato'>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+				<div class='col-md-5 login-form'>
+					<form class="form-inline" method='post' action='/login'>
+  						<div class="form-group">
+    						<input type="text" class="form-control" id="username" placeholder="Username" name='username'>
+  						</div>
+  						<div class="form-group">
+    						<input type="password" class="form-control" id="password" placeholder="Password" name='password'>
+  						</div>
+  						<button type="submit" class="btn btn-success">Login</button>
+					</form>
+				</div>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+				</ul>
+			</nav>
+		</div>
 		<div>
 			<div class='row'>
-				<div class='col-md-7 main-text'>
-					<p>Join Blogpedia today. Create your own free blog.</p>
+				<div class='col-md-8 main-text white'>
+					<p>Join Blogpedia today. Create your free blog.</p>
 					<ul>
 						<li>Simple</li>
 						<li>Lightweight</li>
@@ -35,8 +44,9 @@
 						<li>No Advertisements</li>
 					</ul>
 				</div>
-				<div class='col-md-5 register-form'>
+				<div class='col-md-4 register-form'>
 					<form method='post' action='/register'>
+						<p style='font-size:200%; margin-bottom: 15px'>Register for a free account</p>
 						<div class="form-group">
     						<label for="username">Username</label>
     						<input type="text" class="form-control" id="username" placeholder="Username" name='username'>
@@ -49,7 +59,7 @@
     						<label for="verify">Retype Password</label>
     						<input type="password" class="form-control" id="verify" placeholder=" Retype Password" name='verify'>
   						</div>
-  						<button type="submit" class="btn btn-default">Register</button>
+  						<button type="submit" class="btn btn-primary">Register</button>
 					</form>
 				</div>
 			</div>
