@@ -26,8 +26,11 @@ import datetime
 
 import webapp2
 import jinja2
+import logging
 
 from google.appengine.ext import db
+#from google.appengine.api import images
+from google.appengine.api import memcache
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 POST_RE = re.compile(r"^/blog/(\d+)")
@@ -41,6 +44,26 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
+
+def top_posts(username, update=False):
+    key = str(username)
+    posts = memcache.get(key)
+    if posts is None or update:
+        posts = greetings = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 5', username)
+        posts = list(posts)
+        memcache.set(key, posts)
+    return posts
+
+def permalink_posts(pid, update=False):
+    key = str(pid)
+    post_list = memcache.get(key)
+    if post_list is None or update:
+        key = db.Key.from_path('BlogPost', int(pid))
+        post = db.get(key)
+        comments = db.GqlQuery('select * from Comment where post_id= :1', key)
+        post_list = [post, comments]
+        memcache.set(str(key), post_list)
+    return post_list
 
 
 class BlogHandler(webapp2.RequestHandler):
@@ -76,6 +99,13 @@ class User(db.Model):
    username = db.StringProperty(required = True)
    pw_hash = db.StringProperty(required = True)
    created = db.DateTimeProperty(auto_now_add = True)
+   #firstname = db.StringProperty()
+   #lastname = db.StringProperty()
+   #gender = db.StringProperty()
+   #dob = db.StringProperty()
+   #blogname = db.StringProperty()
+   #email = db.StringProperty()
+   #dp = db.BlobProperty()
 
    @classmethod
    def by_id(cls, uid):
@@ -90,6 +120,12 @@ class BlogPost(db.Model):
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", blogpost= self)
+
+class Comment(db.Model):
+    content = db.TextProperty(required=True)
+    author = db.StringProperty(required=True)
+    post_id = db.StringProperty(required=True)
+    created = db.DateTimeProperty(auto_now_add=True)
 
 class MainHandler(BlogHandler):
     def get(self):
@@ -189,14 +225,17 @@ class BlogPageHandler(BlogHandler):
         #   self.redirect('/')
         check_username = self.request.cookies.get('username')
         if self.user and username != check_username :
-            posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 10', username)
+            #posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 5', username)
+            posts = top_posts(username)
             self.render('blogtemplate.html', posts=posts, username=username, check_username=check_username)
         elif not self.user:
-            posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 10', username)
+            #posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 5', username)
+            posts = top_posts(username)
             self.render('blogtemplate_unregistered.html', posts=posts, username=username)
         else:
             if username == check_username:
-                posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 10', username)
+                #posts = db.GqlQuery('select * from BlogPost where username=:1 order by created desc limit 5', username)
+                posts = top_posts(username)
                 self.render('blogtemplate_registered.html', posts=posts, username=username)
 
 
@@ -217,21 +256,48 @@ class NewPostHandler(BlogHandler):
             blogpost = BlogPost(username=username, subject=subject, content=content)
             blogpost.put()
             pid = blogpost.key().id()
+            time.sleep(0.5)
+            top_posts(username, True)
+            permalink_posts(pid, True)
             self.redirect('/users/%s/%s'%(username, str(pid)))          
         else:
             self.render('newpost.html', error="You need both a title and content!", subject=subject, content=content, username=username)
 
 class PostHandler(BlogHandler):
     def get(self, username, pid):
-        key = db.Key.from_path('BlogPost', int(pid))
-        post = db.get(key)
-        #self.write(post.content)
-        post.content = post.content.replace('\n', '<br>')
+        #key = db.Key.from_path('BlogPost', int(pid))
+        #post = db.get(key)
+        #str_id = str(pid)
+        #comments = db.GqlQuery('select * from Comment where post_id= :1', str_id)
+        post_list = permalink_posts(str(pid))
+        post = post_list[0]
+        comments = post_list[1]
         if self.user:
             check_username = self.request.cookies.get('username')
-            self.render('post.html', post=post, check_username=check_username, username=username, pid=str(pid))
+            self.render('post.html', post=post, check_username=check_username, username=username, pid=str(pid), comments=comments)
         else:
-            self.render('post_unregistered.html', post=post)
+            self.render('post_unregistered.html', post=post, comments=comments)
+
+    def post(self, username, pid):
+        content = self.request.get('content')
+        author = self.request.cookies.get('username')
+        post_id = str(pid)
+
+        if content and self.user:
+            comment = Comment(content=content, author=author, post_id=post_id)
+            comment.put()
+            time.sleep(0.5)
+            self.redirect('/users/%s/%s'%(username, post_id))
+        else:
+            key = db.Key.from_path('BlogPost', int(pid))
+            post = db.get(key)
+            str_id = str(pid)
+            comments = db.GqlQuery('select * from Comment where post_id= :1', str_id)
+            error="You cannot leave a blank comment!"
+            self.render('post.html', post=post, check_username=author, username=username, pid=str_id, comments=comments, error=error)
+
+
+
 
 class LogoutHandler(BlogHandler):
     def get(self):
@@ -277,6 +343,9 @@ class EditPostHandler(BlogHandler):
             blogpost.subject = subject
             blogpost.content = content
             blogpost.put()
+            time.sleep(0.5)
+            top_posts(username, True)
+            permalink_posts(str(post_id),True)
             self.redirect('/users/%s/%s'%(username, str(post_id)))          
         else:
             self.render('editpost.html', error="You need both a title and content!", subject=subject, content=content, username=username)
@@ -288,6 +357,8 @@ class DeletePostHandler(BlogHandler):
             key = db.Key.from_path('BlogPost', int(post_id))
             db.delete(key)
             time.sleep(1)
+            memcache.delete(str(post_id))
+            top_posts(username, True)
             self.redirect('/users/%s'%username)
         else:
             self.redirect('/users/%s/%s'%(username, post_id))    
@@ -299,6 +370,16 @@ class ArchiveHandler(BlogHandler):
         time_now = datetime.datetime.now().strftime("%Y")     
         self.render('archive.html', user_self=self, blogposts=blogposts, username=username, time_now=time_now, check_username=check_username)
 
+#class EditProfileHandler(BlogHandler):
+#    def get(self, username):
+#        check_username = self.request.cookies.get('username')
+#        if self.user and username == check_username:
+#            self.render('editprofile.html', username=username)
+#        else:
+#            self.redirect('/')
+#
+#    def post(self, username):
+#        pass
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
@@ -311,6 +392,7 @@ app = webapp2.WSGIApplication([
     (r'^/users/([a-zA-Z0-9_-]{3,20}$)', BlogPageHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/newpost', NewPostHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/archive', ArchiveHandler),
+#    (r'/users/([a-zA-Z0-9_-]{3,20})/profile/edit', EditProfileHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)', PostHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)/edit', EditPostHandler),
     (r'/users/([a-zA-Z0-9_-]{3,20})/(\d+)/delete', DeletePostHandler),

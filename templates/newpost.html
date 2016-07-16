@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<script src='https://cdn.tinymce.com/4/tinymce.min.js'></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
 		<link type="text/css" rel="stylesheet" href="/static/main.css" />
@@ -11,6 +12,22 @@
 				text-decoration: none;
 			}
 		</style>
+		<script type="text/javascript">
+			tinymce.init({
+  				selector: '#mytextarea',
+  				height: 500,
+  				plugins: [
+    			'advlist autolink lists link image charmap print preview anchor',
+    			'searchreplace visualblocks code fullscreen',
+    			'insertdatetime media table contextmenu paste code'
+  				],
+  				toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  				content_css: [
+    			'https://fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+    			'https://www.tinymce.com/css/codepen.min.css'
+  			]
+			});
+		</script>
 	</head>
 	<body class='container lato'>
 		<div class='row titlebar lato'>
@@ -38,7 +55,7 @@
   				</div>
   				<div class="form-group">
   					<label>Content:</label>
-    				<textarea class="form-control" rows="12" name='content'>{{content}}</textarea>
+    				<textarea id='mytextarea' class="form-control" rows="12" name='content'>{{content}}</textarea>
   				</div>
   				<button type="submit" class="btn btn-default">Publish</button>
   			</form>

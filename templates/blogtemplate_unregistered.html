@@ -34,7 +34,8 @@
 				<hr>
 				<div>
 					<h3 class='lato-bold'><a href='/users/{{username}}/{{post.key().id()}}'>{{post.subject }}</a></h3>	
-					<div>{{post.content.replace('\n', '<br>') | safe }}</div>
+					<!--<div>{{post.content.replace('\n', '<br>') | safe }}</div>-->
+					<div>{{post.content | safe}}</div>
 				</div>
 			{% endfor %}
 		</div>

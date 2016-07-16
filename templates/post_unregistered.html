@@ -48,6 +48,17 @@
 				<script src="https://apis.google.com/js/platform.js" async defer></script>
   				<g:plusone></g:plusone>
 			</div>
+			<hr>
+			<div>
+				<h3 class='comments lato-bold'>Comments</h3>
+				{% for comment in comments %}
+					<div class='comment'>
+						<div><a href="/users/{{comment.author}}">{{comment.author}}</a></div>
+						<div>{{comment.content}}</div>
+					</div>
+					<br>
+				{% endfor %}
+			</div>
 		</div>
 	</body>
 </html>

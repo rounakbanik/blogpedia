@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,900,700' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/static/main.css" />
+		<title>Register</title>
+	</head>
+	<body class='container'>
+		<div class='row titlebar lato'>
+			<header class='row'>
+				<h1 class='col-md-7 white lato-bold'>BLOGPEDIA</h1>
+			</header>
+			<nav class='row navbar lato'>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/help">Help</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="/user/{username}/archive">Archive</a></li>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div class='col-md-5 register-form'>
+			<h2 class='lato-bold'>Edit Profile</h2>
+			<form method='post' style='margin-top: 15px;' enctype="multipart/form-data">
+				<div class="form-group">
+    				<label for="firstname">First Name</label>
+    				<input type="text" class="form-control" id="username" placeholder="First Name" name='firstname'>
+  				</div>
+  				<div class="form-group">
+    				<label for="lastname">Last Name</label>
+    				<input type="text" class="form-control" id="password" placeholder="Last Name" name='lastname'>
+  				</div>
+				<div class="form-group">
+    				<label for="dob">Date of Birth</label>
+    				<input type="text" class="form-control" id="dob" placeholder="Date of Birth" name='dob'>
+  				</div>
+  				<div class="form-group">
+    				<label for="email">E-Mail</label>
+    				<input type="email" class="form-control" id="email" placeholder="E-Mail" name='email'>
+  				</div>
+  				<div class="form-group">
+    				<label for="blogname">Blog Name</label>
+    				<input type="text" class="form-control" id="blogname" placeholder="Blog Name" name='blogname'>
+  				</div>
+  				<div class="form-group">
+    				<label for="gender">Gender</label>
+    				<label class="radio-inline">
+  						<input type="radio" name="gender" id="inlineRadio1" value="Female"> Female
+					</label>
+					<label class="radio-inline">
+  						<input type="radio" name="gender" id="inlineRadio2" value="Male"> Male
+					</label>
+  				</div>
+  				<div class="form-group">
+    				<label for="">Add a Display Picture</label>
+    				<input type="text" class="form-control" id="blogname" placeholder="Blog Name" name='blogname'>
+  				</div>
+  				<button type="submit" class="btn btn-primary">Save Changes</button>
+			</form>
+		</div>
+	</body>
+</html>
